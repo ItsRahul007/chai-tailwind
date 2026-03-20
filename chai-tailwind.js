@@ -90,7 +90,7 @@
     full: "9999px",
   };
 
-  // Convert a numeric spacing value into pixels. Values follow a 4px base grid (like Tailwind), so `chai-p-4` → 16px.
+  // Convert a numeric spacing value into pixels. Values follow a 4px base grid, so `chai-p-4` → 16px.
 
   function spacingToPx(value) {
     const num = parseFloat(value);
