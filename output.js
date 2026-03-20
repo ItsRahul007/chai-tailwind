@@ -22,6 +22,5 @@ input.addEventListener("input", () => {
 
   preview.innerHTML =
     '<span style="color:inherit;">Hello, Chai Tailwind! ☕</span>';
-  classes.forEach((cls) => preview.classList.add(cls));
-  // The MutationObserver in chai-tailwind.js will pick up the new classes
+  classes.forEach((cls) => cls.trim().length > 0 && preview.classList.add(cls));
 });
