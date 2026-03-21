@@ -1,3 +1,5 @@
+"use strict";
+
 // Color palette
 const COLORS = {
   // Basic
@@ -524,30 +526,26 @@ const DYNAMIC_PATTERNS = [
   [/^duration-(\d+)$/, (m) => ({ "transition-duration": m[1] + "ms" })],
 ];
 
+//? Convert a numeric spacing value into pixels. Values follow a 4px base grid, so `chai-p-4` → 16px.
+function spacingToPx(value) {
+  const num = parseFloat(value);
+  if (isNaN(num)) return null;
+  return num * 4 + "px";
+}
+
+//? Look up a colour by name from the palette only.
+function resolveColor(name) {
+  if (!name) return null;
+  return COLORS[name] || null;
+}
+
+//? Helper to extract arbitrary values in bracket notation, e.g. [#ff5733] or [rgb(0,0,0)] or [20px]
+function extractBracketValue(val) {
+  const m = val.match(/^\[(.+)\]$/);
+  return m ? m[1] : null;
+}
+
 (function () {
-  "use strict";
-
-  //? Convert a numeric spacing value into pixels. Values follow a 4px base grid, so `chai-p-4` → 16px.
-  function spacingToPx(value) {
-    const num = parseFloat(value);
-    if (isNaN(num)) return null;
-    return num * 4 + "px";
-  }
-
-  //? Look up a colour by name from the palette only.
-  function resolveColor(name) {
-    if (!name) return null;
-    return COLORS[name] || null;
-  }
-
-  //? Helper to extract arbitrary values in bracket notation, e.g. [#ff5733] or [rgb(0,0,0)] or [20px]
-  function extractBracketValue(val) {
-    const m = val.match(/^\[(.+)\]$/);
-    return m ? m[1] : null;
-  }
-
-  //? Given a class name (without the `chai-` prefix), return a plain object of CSS property → value mappings, or null if unrecognised.
-
   function parseUtility(name) {
     //* 1. Try exact-match lookup first
     if (STATIC_UTILITIES[name]) {
@@ -566,7 +564,6 @@ const DYNAMIC_PATTERNS = [
   }
 
   //? Process a single DOM element: find all `chai-*` classes, resolve styles, apply them as inline styles, and remove the original class names.
-
   function processElement(el) {
     const classes = Array.from(el.classList);
     const chaiClasses = classes.filter((c) => c.startsWith("chai-"));
@@ -617,7 +614,7 @@ const DYNAMIC_PATTERNS = [
     processTree(document.body);
 
     //* Reveal the page now that all chai-* classes have been resolved
-    document.body.classList.add("chai-opacity-100");
+    document.body.style.opacity = "1";
 
     //* Observe future DOM changes so dynamically inserted elements are styled too
     const observer = new MutationObserver((mutations) => {
