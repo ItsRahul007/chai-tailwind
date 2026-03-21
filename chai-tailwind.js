@@ -623,6 +623,9 @@
     // Initial pass
     processTree(document.body);
 
+    // Reveal the page now that all chai-* classes have been resolved
+    document.body.classList.add("chai-opacity-100");
+
     // Observe future DOM changes so dynamically inserted elements are styled too
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
