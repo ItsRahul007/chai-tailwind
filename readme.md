@@ -7,7 +7,9 @@ A lightweight, utility-first CSS engine powered by JavaScript. No build tools, n
 Write utility classes like `chai-p-4`, `chai-bg-red`, `chai-text-center` in your HTML. The engine scans the DOM, converts them into inline styles, and removes the class names — all at runtime.
 
 ```html
-<div class="chai-flex chai-gap-4 chai-p-6 chai-bg-blue chai-text-white chai-rounded-xl">
+<div
+  class="chai-flex chai-gap-4 chai-p-6 chai-bg-blue chai-text-white chai-rounded-xl"
+>
   Hello, Chai Tailwind!
 </div>
 ```
@@ -30,15 +32,15 @@ That's it. Start using `chai-*` classes anywhere in your HTML.
 
 ## Supported Utilities
 
-| Category   | Examples                                                     |
-| ---------- | ------------------------------------------------------------ |
-| Spacing    | `chai-p-4`, `chai-mx-auto`, `chai-mt-8`, `chai-gap-3`       |
-| Colors     | `chai-bg-red`, `chai-text-white`, `chai-bg-[#1e293b]`        |
-| Typography | `chai-text-xl`, `chai-font-bold`, `chai-uppercase`           |
-| Layout     | `chai-flex`, `chai-grid`, `chai-grid-cols-3`, `chai-hidden`  |
-| Sizing     | `chai-w-20`, `chai-h-full`, `chai-max-w-[600px]`            |
-| Borders    | `chai-border`, `chai-rounded-xl`, `chai-border-dashed`       |
-| Shadows    | `chai-shadow-md`, `chai-shadow-xl`                           |
+| Category   | Examples                                                      |
+| ---------- | ------------------------------------------------------------- |
+| Spacing    | `chai-p-4`, `chai-mx-auto`, `chai-mt-8`, `chai-gap-3`         |
+| Colors     | `chai-bg-red`, `chai-text-white`, `chai-bg-[#1e293b]`         |
+| Typography | `chai-text-xl`, `chai-font-bold`, `chai-uppercase`            |
+| Layout     | `chai-flex`, `chai-grid`, `chai-grid-cols-3`, `chai-hidden`   |
+| Sizing     | `chai-w-20`, `chai-h-full`, `chai-max-w-[600px]`              |
+| Borders    | `chai-border`, `chai-rounded-xl`, `chai-border-dashed`        |
+| Shadows    | `chai-shadow-md`, `chai-shadow-xl`                            |
 | Effects    | `chai-opacity-50`, `chai-transition-all`, `chai-duration-300` |
 
 ## Bracket Notation
@@ -61,7 +63,3 @@ For custom values that aren't in the built-in palette, wrap them in `[]`:
 ├── output.js          # Playground script
 └── logo.png           # Logo
 ```
-
-## License
-
-MIT

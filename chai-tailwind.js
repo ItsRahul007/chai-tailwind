@@ -78,7 +78,7 @@
   };
 
   // Border-radius presets
-  const RADII = {
+  const RADIUS = {
     none: "0px",
     sm: "2px",
     DEFAULT: "4px",
@@ -90,8 +90,7 @@
     full: "9999px",
   };
 
-  // Convert a numeric spacing value into pixels. Values follow a 4px base grid, so `chai-p-4` → 16px.
-
+  //? Convert a numeric spacing value into pixels. Values follow a 4px base grid, so `chai-p-4` → 16px.
   function spacingToPx(value) {
     const num = parseFloat(value);
     if (isNaN(num)) return null;
@@ -99,19 +98,18 @@
   }
 
   //? Look up a colour by name from the palette only.
-  //? For custom colors (hex, rgb, hsl), use bracket notation: chai-bg-[#ff5733]
   function resolveColor(name) {
     if (!name) return null;
     return COLORS[name] || null;
   }
 
-  //? Helper to extract arbitrary values in bracket notation, e.g. [#ff5733] or [20px]
+  //? Helper to extract arbitrary values in bracket notation, e.g. [#ff5733] or [rgb(0,0,0)] or [20px]
   function extractBracketValue(val) {
     const m = val.match(/^\[(.+)\]$/);
     return m ? m[1] : null;
   }
 
-  // Static utilities
+  //* Static utilities
   //? Each key maps directly to the CSS properties it produces.
   const STATIC_UTILITIES = {
     // Spacing — auto margins
@@ -184,7 +182,7 @@
     "border-dotted": { "border-style": "dotted" },
 
     // Border radius
-    rounded: { "border-radius": RADII.DEFAULT },
+    rounded: { "border-radius": RADIUS.DEFAULT },
 
     // Box shadow
     shadow: { "box-shadow": SHADOWS.DEFAULT },
@@ -286,8 +284,7 @@
     "select-auto": { "user-select": "auto" },
   };
 
-  // Dynamic patterns (regex-based lookup)
-  //? Each entry is [regex, handler(match) => styles | null].
+  //* Dynamic patterns for regex-based lookup
   //? Checked in order — first match wins.
   const DYNAMIC_PATTERNS = [
     // Width & Height (px via spacing scale or bracket notation)
@@ -461,7 +458,7 @@
     [
       /^rounded-(.+)$/,
       (m) => {
-        if (RADII[m[1]]) return { "border-radius": RADII[m[1]] };
+        if (RADIUS[m[1]]) return { "border-radius": RADIUS[m[1]] };
         if (/^\d+$/.test(m[1])) return { "border-radius": m[1] + "px" };
         return null;
       },
@@ -557,14 +554,15 @@
   //? Given a class name (without the `chai-` prefix), return a plain object of CSS property → value mappings, or null if unrecognised.
 
   function parseUtility(name) {
-    // 1. Try exact-match lookup first (O(1))
+    //* 1. Try exact-match lookup first
     if (STATIC_UTILITIES[name]) {
       return STATIC_UTILITIES[name];
     }
 
-    // 2. Try dynamic patterns (first match wins)
+    //* 2. Try dynamic patterns
     for (const [regex, handler] of DYNAMIC_PATTERNS) {
       const match = name.match(regex);
+
       if (match) return handler(match);
     }
 
@@ -581,7 +579,8 @@
     if (chaiClasses.length === 0) return;
 
     chaiClasses.forEach((cls) => {
-      const utility = cls.slice(5); // strip "chai-"
+      //? strip "chai-" so that we can parse the utility
+      const utility = cls.slice(5);
       const styles = parseUtility(utility);
 
       if (!styles) {
@@ -602,41 +601,40 @@
     });
   }
 
-  /**
-   * Walk the entire DOM tree starting from `root` and process every element.
-   */
+  //? Walk the entire DOM tree starting from root and process every element
   function processTree(root) {
     const allElements = root.querySelectorAll("*");
     allElements.forEach(processElement);
-    // Also process the root itself if it's an element
+
+    //! Also process the root itself if it's an element
     if (root.nodeType === Node.ELEMENT_NODE) {
       processElement(root);
     }
   }
 
   /**
-   * Initialise the Chai Tailwind engine:
-   * 1. Process all existing elements
-   * 2. Set up a MutationObserver to handle dynamically added content
+   *? Initialise the Chai Tailwind engine:
+   ** 1. Process all existing elements
+   ** 2. Set up a MutationObserver to handle dynamically added content
    **/
   function init() {
-    // Initial pass
+    //* Initial pass
     processTree(document.body);
 
-    // Reveal the page now that all chai-* classes have been resolved
+    //* Reveal the page now that all chai-* classes have been resolved
     document.body.classList.add("chai-opacity-100");
 
-    // Observe future DOM changes so dynamically inserted elements are styled too
+    //* Observe future DOM changes so dynamically inserted elements are styled too
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        // Handle newly added nodes
+        //? Handle newly added nodes
         mutation.addedNodes.forEach((node) => {
           if (node.nodeType === Node.ELEMENT_NODE) {
             processTree(node);
           }
         });
 
-        // Handle class attribute changes on existing nodes
+        //? Handle class attribute changes on existing nodes
         if (
           mutation.type === "attributes" &&
           mutation.attributeName === "class"
@@ -654,11 +652,10 @@
     });
 
     console.log(
-      "☕ Chai Tailwind engine initialised — scanning for chai-* classes",
+      "☕ Chai Tailwind engine initialised \nscanning for chai-* classes",
     );
   }
 
-  // ─── Boot ─────────
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {
